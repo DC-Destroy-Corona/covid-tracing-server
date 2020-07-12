@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="covid.tracing.mappers.UserMapper">
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId" parameterType="covid.tracing.model.User">
+        INSERT INTO USER_TB
+        (
+            EMAIL,
+            PWD,
+            USER_NM,
+            BIRTH_DATE_YMD,
+            PHONE_NO
+        )
+        VALUE
+        (
+            #{email},
+            #{password},
+            #{name},
+            #{birthdate},
+            #{phone}
+        )
+    </insert>
+
+    <select id="findUserWithEmail" resultMap="User" parameterType="string">
+        SELECT *
+        FROM USER_TB
+        WHERE USER_TB.EMAIL = #{email}
+    </select>
+
+    <select id="findUserWithId" resultMap="User" parameterType="long">
+        SELECT *
+        FROM USER_TB
+        WHERE USER_TB.USER_SQ = #{id}
+    </select>
+
+    <resultMap id="User" type="covid.tracing.model.User">
+        <result property="userId" column="USER_SQ"/>
+        <result property="email" column="EMAIL"/>
+        <result property="password" column="PWD"/>
+        <result property="name" column="USER_NM"/>
+        <result property="birthdate" column="BIRTH_DATE_YMD"/>
+        <result property="phone" column="PHONE_NO"/>
+    </resultMap>
+
+</mapper>

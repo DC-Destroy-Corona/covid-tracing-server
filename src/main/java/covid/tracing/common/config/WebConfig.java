@@ -1,4 +1,4 @@
-package covid.tracing.config;
+package covid.tracing.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

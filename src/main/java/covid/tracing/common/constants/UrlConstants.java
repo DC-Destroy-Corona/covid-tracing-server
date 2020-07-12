@@ -1,4 +1,4 @@
-package covid.tracing.utils.constant;
+package covid.tracing.common.constants;
 
 public class UrlConstants {
 

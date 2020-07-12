@@ -1,6 +1,6 @@
-package covid.tracing.config;
+package covid.tracing.common.config;
 
-import covid.tracing.utils.constant.RabbitMQConstants;
+import covid.tracing.common.constants.RabbitMQConstants;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
