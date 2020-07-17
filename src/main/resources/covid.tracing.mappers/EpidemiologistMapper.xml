@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="covid.tracing.mappers.EpidemiologistMapper">
+
+    <insert id="insertEpidemiologist" useGeneratedKeys="true" keyProperty="epidId" parameterType="covid.tracing.model.Epidemiologist">
+        INSERT INTO EPIDEMIOLOGIST_TB
+        (
+            EMAIL,
+            PWD,
+            EPID_NM,
+            PHONE_NO
+        )
+        VALUE
+        (
+            #{email},
+            #{password},
+            #{name},
+            #{phone}
+        )
+    </insert>
+
+    <select id="findEpidemiologistWithEmail" resultMap="Epidemiologist" parameterType="string">
+        SELECT *
+        FROM EPIDEMIOLOGIST_TB
+        WHERE EPIDEMIOLOGIST_TB.EMAIL = #{email}
+    </select>
+
+    <select id="findEpidemiologistWithId" resultMap="Epidemiologist" parameterType="long">
+        SELECT *
+        FROM EPIDEMIOLOGIST_TB
+        WHERE EPIDEMIOLOGIST_TB.EPID_SQ = #{id}
+    </select>
+
+    <resultMap id="Epidemiologist" type="covid.tracing.model.Epidemiologist">
+        <result property="epidId" column="EPID_SQ"/>
+        <result property="email" column="EMAIL"/>
+        <result property="password" column="PWD"/>
+        <result property="name" column="USER_NM"/>
+        <result property="phone" column="PHONE_NO"/>
+    </resultMap>
+
+</mapper>

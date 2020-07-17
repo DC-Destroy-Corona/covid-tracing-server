@@ -35,6 +35,14 @@
         AND AUTHENTICATION_TB.ROLE = #{role}
     </delete>
 
+    <update id="updateUserAuthentication" parameterType="hashmap">
+        update house
+        set
+        AUTH_KEY = #{authKey},
+        where EMAIL = #{email}
+        and ROLE = #{role}
+    </update>
+
     <resultMap id="Authentication" type="covid.tracing.model.Authentication">
         <result property="authKey" column="AUTH_KEY"/>
         <result property="email" column="EMAIL"/>

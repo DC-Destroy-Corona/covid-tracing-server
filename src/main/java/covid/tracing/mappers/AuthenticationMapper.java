@@ -21,7 +21,17 @@ public interface AuthenticationMapper {
             @Param("email") String email,
             @Param("role") Role role);
 
+    Authentication findUserAuthentication(
+            @Param("email") String email,
+            @Param("role") Role role);
+
+
     void deleteUserAuthentication(
+            @Param("email") String email,
+            @Param("role") Role user);
+
+    void updateUserAuthentication(
+            @Param("authKey") String authKey,
             @Param("email") String email,
             @Param("role") Role user);
 

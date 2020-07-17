@@ -46,13 +46,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                 .headers().frameOptions().disable()
                     .and()
-
-                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class) // 1순위 필터
                 .authorizeRequests()
-                    .antMatchers("/user/sign-up/**", "/user/login").permitAll()
-                    .antMatchers("/epid/sign-up/**", "/epid/login").permitAll()
-                    .anyRequest().authenticated();
-
+//                    .antMatchers("/css/**", "/images/**").permitAll()
+//                    .antMatchers("/user/sign-up/**", "/user/login").permitAll()
+//                    .antMatchers("/", "/epid/sign-up/**", "/epid/login").permitAll()
+                    .anyRequest().permitAll()
+                    .and()
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class); // 1순위 필터
     }
 
     @Bean

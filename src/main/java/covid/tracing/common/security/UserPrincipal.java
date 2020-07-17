@@ -1,5 +1,6 @@
 package covid.tracing.common.security;
 
+import covid.tracing.model.Epidemiologist;
 import covid.tracing.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,22 +15,34 @@ public class UserPrincipal implements UserDetails {
 
     private String password;
 
-    public UserPrincipal(Long userId, String email, String password) {
-        this.id = userId;
+    private String name;
+
+    public UserPrincipal(Long id, String email, String password, String name) {
+        this.id = id;
         this.email = email;
         this.password = password;
+        this.name = name;
     }
 
     public static UserPrincipal create(User user) {
-        return new UserPrincipal(user.getUserId(), user.getEmail(), user.getPassword());
+        return new UserPrincipal(user.getUserId(), user.getEmail(), user.getPassword(), user.getName());
     }
 
-    public Long getUserId() {
+    public static UserPrincipal create(Epidemiologist epidemiologist) {
+        return new UserPrincipal(epidemiologist.getEpidId(), epidemiologist.getEmail(), epidemiologist.getPassword(), epidemiologist.getName());
+    }
+
+    public Long getId() {
         return this.id;
     }
 
     public String getEmail() {
         return this.email;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
     }
 
     @Override
@@ -42,10 +55,7 @@ public class UserPrincipal implements UserDetails {
         return null;
     }
 
-    @Override
-    public String getUsername() {
-        return null;
-    }
+
 
     @Override
     public boolean isAccountNonExpired() {
