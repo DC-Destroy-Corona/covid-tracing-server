@@ -7,6 +7,22 @@ spring:
     dbcp2:
       validation-query: SELECT 1
 
+  rabbitmq:
+    host: localhost
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    username: covid
+    password: covid
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    check-template-location: true
+    suffix: .html
+    mode: HTML5
+    cache: false # 개발 모드 : false, 운영 모드 : true
+    encoding: utf-8
+
   mail:
     host: smtp.gmail.com
     port: 587
