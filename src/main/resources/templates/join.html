@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./../static/css/join.css" th:href="@{/css/join.css}" />
+    <!-- <link rel="stylesheet" href="join.css" /> -->
+    <title> 회원가입 </title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="joinForm">
+        <form th:action="@{/epid/sign-up}" id="signUpForm" th:object="${signUpForm}" method="POST">
+<!--            <form th:action="@{/epid/sign-up}" id="signUpForm" method="POST" novalidate>-->
+            <fieldset>
+                <legend style="display: none;">회원가입</legend>
+                <header> </header>
+                <div class="content">
+                    <section>
+                        <article>
+                            <div id="logo">
+                                <img src="../../static/images/logo.jpg" th:src="@{/images/logo.jpg}" alt="no"
+                                    width="250px">
+                                <!-- <img src="/logo.jpg" alt="no" width="250px"> -->
+                            </div>
+                            <div class="join_box">
+                                <h1 style="text-align: center;">회원가입</h1>
+                                <hr />
+                                <table width="700" heiht="700" cellpadding="0" style="border-collapse: collapse;">
+                                    <tr class="register">
+                                        <td width="10%" id="joinId"> 이메일 </td>
+                                        <td ><input type="text" id="email" name="email" th:field="*{email}" placeholder="Email"></td>
+                                    </tr>
+                                    <tr style="padding: 0">
+                                        <td colspan="2" style="padding-left: 130px; color: red; "><small th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</small></td>
+                                    </tr>
+                                    <tr class="register">
+                                        <td width="10%" id="joinName"> 이름 </td>
+                                        <td><input type="text" id="name" name="name" th:field="*{name}" placeholder="Name"></td>
+                                    </tr>
+                                    <tr style="padding: 0">
+                                        <td colspan="2" style="padding-left: 130px; color: red; "> <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small></td>
+                                    </tr>
+                                    <tr class="register">
+                                        <td width="10%" id="joinPwd"> 비밀번호 </td>
+                                        <td><input type="password" id="password" name="password" th:field="*{password}" placeholder="Password"></td>
+                                    </tr>
+                                    <tr style="padding: 0">
+                                        <td colspan="2" style="padding-left: 130px; color: red; "> <small th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</small></td>
+                                    </tr>
+                                    <tr class="register">
+                                        <td width="20%" id="pwdConfirm"> 비밀번호 확인 </td>
+                                        <td><input type="password" name="pwdConfirm" placeholder="Password Confirm">
+                                        </td>
+                                    </tr>
+                                    <tr class="register">
+                                        <td width="10%" id="joinPhone"> 전화번호 </td>
+                                        <td><input type="text" id="phone" name="phone" th:field="*{phone}" placeholder="Phone Number"></td>
+                                    </tr>
+                                    <tr style="padding: 0">
+                                        <td colspan="2" style="padding-left: 130px; color: red; "> <small th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Phone Error</small></td>
+                                    </tr>
+                                </table>
+                                <table>
+                                    <tr height="40">
+                                        <td width="500"><button type="submit" class="join_ok" id="joinOk"> 가입 </button>
+<!--                                        <td width="500"><button type="button" class="join_ok" id="joinOk"> 가입 </button>-->
+                                        </td>
+<!--                                        <div id="myModal" class="modal">-->
+<!--                                            <div class="modal-content">-->
+<!--                                                <span class="close">&times;</span>-->
+<!--                                                <p>회원가입이 완료되었습니다.</p>-->
+<!--                                                <button type="button" th:href="@{/login}">확인</button>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <td width="500"><button type="button" class="join_cancle" th:href="@{/login}">-->
+<!--                                                취소 </button></td>-->
+                                    </tr>
+                                </table>
+                            </div>
+                        </article>
+                    </section>
+
+                    <aside>
+                        <img id="covid-gif" src="./../static/images/covid.gif" th:src="@{/images/covid.gif}" alt="no">
+                    </aside>
+                </div>
+                <footer>
+                    @ 2020 Covid Tracer FROM DC
+                </footer>
+            </fieldset>
+        </form>
+    </div>
+    <script>
+        var modal = document.getElementById('myModal');
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("joinOk");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on the button, open the modal 
+        btn.onclick = function () {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+            location.href = '/login.html';
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,157 @@
+html, body{
+    border: 0;
+    height: 100%;
+    margin: 0;
+    width: 100%;
+}
+fieldset {
+    border: 0;
+    padding: 0;
+}
+#covid-gif
+{ 
+    width: 100%; 
+    margin: 10px auto; 
+    height: 100%;
+}
+
+/* #mainimg 
+{ 
+    width: 100%; 
+    margin: 10px auto; 
+    height: 100%;
+} */
+
+div .joinForm{
+    margin: 0 auto;
+}
+
+header, section {
+    margin: 5px;
+    padding: 30px 50px;
+}
+
+header{
+    height: 40px;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    height: 700px;
+    margin-bottom: 50px;
+}
+
+section, aside {
+    float: left;
+    min-height: 100%;
+    position: relative;
+}
+
+section #logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.content section{
+    flex: 1.5;
+    padding:10px
+}
+
+.join_box{
+    position: relative;
+    width: 320px;
+    margin: 0 auto;
+    border: 2px solid rgb(56, 56, 56);
+    padding: 20px 50px 50px;
+    border-radius: 10px;
+}
+
+/* .joinform .join_text {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 10px 15px 10px;
+    box-sizing: border-box;
+} */
+
+
+.join_ok {
+    margin: 30px 0 0;
+    width: 150px;
+    height: 45px;
+    border-radius: 3px;
+    font-size: 15px;
+    color: #ffffff;
+    border: 0;
+    background-color: #B0D8FF;
+    cursor: pointer;
+}
+
+.join_cancle {
+    margin: 30px 0 0;
+    width: 150px;
+    height: 45px;
+    border-radius: 3px;
+    font-size: 15px;
+    color: #000000;
+    border: 0;
+    border: 1px solid #B0D8FF;
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
+.register {
+    height: 50px;
+}
+
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Could be more or less, depending on screen size */                          
+}
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.content aside {
+    flex: 3.5;
+    padding: 10px;
+    margin: 5px;
+}
+
+footer {
+    color:#999;
+    height: 50px;
+    text-align: center;
+    width: 98%;
+    bottom: 0;
+    margin: 5px;
+    position: absolute;
+}

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../static/css/confirmerpage.css" />
+    <!-- <link rel="stylesheet" href="confirmerpage.css" /> -->
+    <title> 상세 페이지 </title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        function startTime() {
+            var today = new Date();
+            var h = today.getHours();
+            var m = today.getMinutes();
+            var s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+            document.getElementById('clock').innerHTML =
+                h + ":" + m + ":" + s;
+            var t = setTimeout(startTime, 500);
+        }
+        function checkTime(i) {
+            if (i < 10) { i = "0" + i }; // 숫자가 10보다 작을 경우 앞에 0을 붙여줌
+            return i;
+        }
+
+        function openSubmenu() {
+            document.getElementsByClassName("submenu")[0].setAttribute("class", "style1");
+        }
+        function openSubmenu2() {
+            document.getElementsByClassName("sub-submenu")[0].setAttribute("class", "style2");
+        }
+    </script>
+</head>
+
+<body onload="startTime()">
+    <div class="confirmer_layout">
+        <header>
+            <h4 style="margin-left: 20px;" onclick="window.location.href='/mainpage.html'">역학 조사 시스템</h4>
+            <div class="update">
+                <p id="text"> | 데이터 업데이트 시간 : </p>
+                <p id="clock"> </p>
+            </div>
+            <button id="logout" onclick="window.location.href='/login.html'"> <i class="f fa-sign-out"
+                    aria-hidden="true">로그아웃</i></button>
+        </header>
+        <nav class="sidebar">
+            <ul>
+                <h3 style="color: #A5D1F7; margin-left: 25px;"><i class="fa fa-bars" aria-hidden="true"></i></h3>
+                <li>
+                    <button type="button" class="home" onclick="window.location.href='/mainpage.html'">
+                        <i class="fa fa-user" aria-hidden="true">
+                            통계 데이터 조회
+                        </i>
+                    </button>
+                </li>
+
+                <li>
+                    <button type="button" class="detail" onclick="window.location.href='/confirmerpage.html'">
+                        <i class="fa fa-user" aria-hidden="true">
+                            접촉자 동선 조회
+                        </i>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+        <section>
+            <article>
+                <!-- <img src="/detailmap.jpg" style="width: 100%; height: 800px;"> -->
+                <div id="map" style="width: 1746px; height: 817px;"></div>
+                <script type="text/javascript"
+                    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3c5116089ec5df9e86b172bb6830615d&libraries=LIBRARY"></script>
+                <script>
+                    var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
+                        mapOption = {
+                            center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+                            level: 3 // 지도의 확대 레벨
+                        };
+
+                    var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+                    // 마커를 표시할 위치와 title 객체 배열입니다 
+                    var positions = [
+                        {
+                            title: '카카오',
+                            latlng: new kakao.maps.LatLng(33.450705, 126.570677)
+                        },
+                        {
+                            title: '생태연못',
+                            latlng: new kakao.maps.LatLng(33.450936, 126.569477)
+                        },
+                        {
+                            title: '텃밭',
+                            latlng: new kakao.maps.LatLng(33.450879, 126.569940)
+                        },
+                        {
+                            title: '근린공원',
+                            latlng: new kakao.maps.LatLng(33.451393, 126.570738)
+                        }
+                    ];
+
+                    // 마커 이미지의 이미지 주소입니다
+                    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+
+                    for (var i = 0; i < positions.length; i++) {
+
+                        // 마커 이미지의 이미지 크기 입니다
+                        var imageSize = new kakao.maps.Size(24, 35);
+
+                        // 마커 이미지를 생성합니다    
+                        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+                        // 마커를 생성합니다
+                        var marker = new kakao.maps.Marker({
+                            map: map, // 마커를 표시할 지도
+                            position: positions[i].latlng, // 마커를 표시할 위치
+                            title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+                            image: markerImage // 마커 이미지 
+                        });
+                    }
+                    var linePath = [
+                        new kakao.maps.LatLng(33.450705, 126.570677),
+                        new kakao.maps.LatLng(33.451393, 126.570738),
+                        new kakao.maps.LatLng(33.450936, 126.569477),
+                        new kakao.maps.LatLng(33.450879, 126.569940)
+                    ];
+
+                    // 지도에 표시할 선을 생성합니다
+                    var polyline = new kakao.maps.Polyline({
+                        path: linePath, // 선을 구성하는 좌표배열 입니다
+                        strokeWeight: 5, // 선의 두께 입니다
+                        strokeColor: '#FFAE00', // 선의 색깔입니다
+                        strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                        strokeStyle: 'solid' // 선의 스타일입니다
+                    });
+
+                    // 지도에 선을 표시합니다 
+                    polyline.setMap(map);  
+                </script>
+                <div class="top_card">
+                    <div class="confirmer_card">
+                        <p>-- 번 확진자 동선 (--개 지점 방문)</p>
+                        <p>총 접촉자 수 : --</p>
+                        <p>데이터 동기화 시각 : 2020-00-00 00:00</p>
+                    </div>
+                </div>
+                <div class="square">
+                    <div style="position:absolute; border-radius: 50%; 
+                        width: 20px; height: 20px; 
+                        background-color: rgb(25, 0, 255);
+                        margin: 10px;">
+                    </div>
+                    <p> 확진자 경로</p>
+                    <hr style="margin: 0;" />
+                    <div class="contact_part">
+                        <table>
+                            <tr>
+                                <td id="label">
+                                    <div style="position:relative; border-radius: 50%; 
+                                        width: 20px; height: 20px; 
+                                        background-color: rgb(255, 104, 142);"></div>
+                                    <p style="width: 50px; margin: 0;">
+                                        접촉자
+                                    </p>
+                                </td>
+                                <td> 123</td>
+                                <td id="label">
+                                    <div style="position: relative;; border-radius: 50%; 
+                                        width: 20px; height: 20px; 
+                                        background-color: rgb(154, 100, 253);"></div>
+                                    <p style="width: 50px; margin: 0;">
+                                        접촉자
+                                    </p>
+                                </td>
+                                <td> 3433</td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+                <div class="bottom_card">
+                    <div class="contact_card">
+                        <p>-- 번 접촉자 (--개 지점 방문)
+                            <i class="fa fa-arrow-circle-o-right" aria-hidden="true"
+                                style="font-size: 23px; float:right; cursor: pointer; "
+                                onclick="window.location.href='/contactpage.html'"> </i>
+                        </p>
+                        <p>접촉자 수 : --</p>
+                    </div>
+                    <div class="contact_card">
+                        <p>-- 번 접촉자 (--개 지점 방문)
+                            <i class="fa fa-arrow-circle-o-right" aria-hidden="true"
+                                style="font-size: 23px; float:right; cursor: pointer; "
+                                onclick="window.location.href='/contactpage.html'"> </i>
+                        </p>
+                        <p>접촉자 수 : --</p>
+                    </div>
+                </div>
+                <div class="side_card">
+                    <h3 style="margin-left: 10px;">동선 정보</h3>
+                    <hr />
+                    <div class="root_card">
+                        <table>
+                            <tr style="border-bottom: 1px solid black;">
+                                <td style="width: 10%; border-bottom: 1px solid black; font-weight: bolder;">날짜</td>
+                                <td id="place">2020-07-20</td>
+                                <td id="num" rowspan="3">
+                                    <h3>23</h3>
+                                </td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid black;">
+                                <td style="width: 10%; border-bottom: 1px solid black; font-weight: bolder;">장소</td>
+                                <td id="place">경상북도 경산시 하양읍 13-13</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 10%;  font-weight: bolder;">시간</td>
+                                <td id="time">17:00 ~ 16:00</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="root_card">
+                        <table>
+                            <tr style="border-bottom: 1px solid black;">
+                                <td style="width: 10%; border-bottom: 1px solid black; font-weight: bolder;">날짜</td>
+                                <td id="place">2020 - 07 - 20</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid black;">
+                                <td style="width: 10%; border-bottom: 1px solid black; font-weight: bolder;">장소</td>
+                                <td id="place">경상북도 경산시 하양읍 13-13</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 10%;  font-weight: bolder;">시간</td>
+                                <td id="time">17:00 ~ 16:00</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </article>
+        </section>
+        <footer>
+            @ 2020 Covid Tracer FROM DC
+        </footer>
+    </div>
+</body>
+
+</html>

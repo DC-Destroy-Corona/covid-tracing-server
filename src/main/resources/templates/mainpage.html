@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../static/css/mainpage.css" th:href="@{/css/mainpage.css}" />
+    <!-- <link rel="stylesheet" href="mainpage.css" /> -->
+    <title> 메인페이지 </title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        function startTime() {
+            var today = new Date();
+            var h = today.getHours();
+            var m = today.getMinutes();
+            var s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+            document.getElementById('clock').innerHTML =
+                h + ":" + m + ":" + s;
+            var t = setTimeout(startTime, 500);
+        }
+        function checkTime(i) {
+            if (i < 10) { i = "0" + i }; // 숫자가 10보다 작을 경우 앞에 0을 붙여줌
+            return i;
+        }
+
+        function openSubmenu() {
+            document.getElementsByClassName("submenu")[0].setAttribute("class", "style1");
+        }
+        function openSubmenu2() {
+            document.getElementsByClassName("sub-submenu")[0].setAttribute("class", "style2");
+        }
+    </script>
+</head>
+
+<body onload="startTime()">
+    <div class="main">
+        <header>
+            <h4 style="margin-left: 20px;" onclick="window.location.href='/mainpage.html'">역학 조사 시스템</h4>
+            <div class="update">
+                <p id="text"> | 데이터 업데이트 시간 : </p>
+                <p id="clock"> </p>
+            </div>
+            <button id="logout" onclick="window.location.href='/login.html'"> <i class="f fa-sign-out"
+                    aria-hidden="true">로그아웃</i></button>
+        </header>
+        <p><a href="/epid/logout">로그아웃</a></p>
+        <nav class="sidebar">
+            <ul>
+                <h3 style="color: #A5D1F7; margin-left: 25px;"><i class="fa fa-bars" aria-hidden="true"></i></h3>
+                <li>
+                    <button type="button" class="home" onclick="window.location.href='/mainpage.html'">
+                        <i class="fa fa-user" aria-hidden="true">
+                            통계 데이터 조회
+                        </i>
+                    </button>
+                </li>
+
+                <li>
+                    <button type="button" class="detail" onclick="window.location.href='/confirmerpage.html'">
+                        <i class="fa fa-user" aria-hidden="true">
+                            접촉자 동선 조회
+                        </i>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+        <section>
+            <article>
+                <div class="content_all">
+                    <div class="map">
+                        <div class="header">
+                            <h3 style="margin-left:10px; color: #E74A3B;"> 확진자 현황</h3>
+                            <div class="datetime">
+                                <label for="date" id="label">일자:</label>
+                                <input type="date" id="date" name="date">
+                                <input type="submit" value="확인">
+                            </div>
+                        </div>
+
+                        <hr style="margin: 0;" />
+                        <div class="mappicture">
+                            <img src="../static/images/southkorea.jpg" th:src="@{/images/southkorea.jpg}" width="550px" height="700px"
+                                 style="margin-top: 10px;">
+                            <!-- <img src="/southkorea.jpg" width="550px" height="700px" style="margin-top: 10px;"> -->
+                            <div class="confirmer" style="border: 1px solid; ">
+                                <p
+                                    style="padding:10px; margin: 0; background-color: #F4A100; color: white; font-weight: bolder;">
+                                    확진자</p>
+                                <hr style="margin: 0;" />
+                                <p style="font-size: 25px; margin: 0;">2223</p>
+                            </div>
+                            <div class="contact" style="border: 1px solid;">
+                                <p
+                                    style="padding:10px; margin: 0; background-color: #00CFD5; color: white; font-weight: bolder;">
+                                    접촉자</p>
+                                <hr style="margin: 0;" />
+                                <p style="font-size: 25px; margin: 0;">1115</p>
+                            </div>
+                            <div class="area" id="seoul" onclick="location.href='mainpage.html'">서울 <hr/> <label>25</label></div>
+                            <div class="area" id="deajeon">대전 <hr/> <label>40</label></div>
+                            <div class="area" id="gyeonggi">경기 <hr/> <label>35</label></div>
+                            <div class="area" id="incheon">인천 <hr/> <label>10</label></div>
+                            <div class="area" id="gangwon">강원 <hr/> <label>10</label></div>
+                            <div class="area" id="chungbuk">충북 <hr/> <label>10</label></div>
+                            <div class="area" id="sejong">세종 <hr/> <label>10</label></div>
+                            <div class="area" id="chungnam">충남 <hr/> <label>10</label></div>
+                            <div class="area" id="jeonnam">전남 <hr/> <label>10</label></div>
+                            <div class="area" id="jeonbuk">전북 <hr/> <label>10</label></div>
+                            <div class="area" id="gyeongbuk">경북 <hr/> <label>1393</label></div>
+                            <div class="area" id="deagu">대구 <hr/> <label>6929</label></div>
+                            <div class="area" id="ulsan">울산 <hr/> <label>10</label></div>
+                            <div class="area" id="busan">부산 <hr/> <label>10</label></div>
+                            <div class="area" id="gyeongnam">경남 <hr/> <label>10</label></div>
+                            <div class="area" id="gwangju">광주 <hr/> <label>10</label></div>
+                            <div class="area" id="jeju">제주도 <hr/> <label>2</label></div>
+                        </div>
+
+                    </div>
+                    <div class="datalist">
+                        <div class="header">
+                            <h3 style="margin-left:10px; color: #E74A3B;"> -- 의 통계</h3>
+
+                        </div>
+                        <hr style="margin: 0;" />
+                        <div class="tablelist">
+                            <div id="first">
+                                <table>
+                                    <h4 style="text-align: left; margin: 0 0 10px;">[ -- 의 확진자 ]</h4>
+                                    <tr>
+                                        <th id="number">NO</th>
+                                        <th id="sex">성별</th>
+                                        <th id="contactnum">접촉자 수</th>
+                                        <th id="visitnum">방문 지점 수</th>
+                                    </tr>
+                                    <tr onclick="location.href='/confirmerpage.html'" style="cursor: pointer;">
+                                        <td>453122</td>
+                                        <td>남</td>
+                                        <td>12</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>453</td>
+                                        <td>여</td>
+                                        <td>24</td>
+                                        <td>7</td>
+                                    </tr>
+                                    <tr>
+                                        <td>453122</td>
+                                        <td>남</td>
+                                        <td>12</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>453122</td>
+                                        <td>남</td>
+                                        <td>12</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>456</td>
+                                        <td>여</td>
+                                        <td>25</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>457</td>
+                                        <td>남</td>
+                                        <td>25</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>367</td>
+                                        <td>여</td>
+                                        <td>25</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>457</td>
+                                        <td>남</td>
+                                        <td>25</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>457</td>
+                                        <td>여</td>
+                                        <td>25</td>
+                                        <td>5</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div id="second">
+                                <table>
+                                    <h4 style="text-align: left; margin: 0 0 10px;">[ -- 의 접촉자 ]</h4>
+                                    <tr>
+                                        <th id="number">NO</th>
+                                        <th id="sex">성별</th>
+                                        <th id="confirmernum">접촉 확진자</th>
+                                        <th id="visitnum">방문 지점 수</th>
+                                    </tr>
+                                    <tr>
+                                        <td>457</td>
+                                        <td>여</td>
+                                        <td>123333</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>457</td>
+                                        <td>여</td>
+                                        <td>123333</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1235</td>
+                                        <td>남</td>
+                                        <td>1244</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>123</td>
+                                        <td>남</td>
+                                        <td>3245</td>
+                                        <td>8</td>
+                                    </tr>
+                                    <tr>
+                                        <td>123</td>
+                                        <td>남</td>
+                                        <td>3245</td>
+                                        <td>8</td>
+                                    </tr>
+                                    <tr>
+                                        <td>123</td>
+                                        <td>남</td>
+                                        <td>3245</td>
+                                        <td>8</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </section>
+        <footer>
+            @ 2020 Covid Tracer FROM DC
+        </footer>
+    </div>
+</body>
+
+</html>

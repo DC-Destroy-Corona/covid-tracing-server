@@ -1,0 +1,302 @@
+html, body{
+    border: 0;
+    height: 100%;
+    margin: 0;
+    width: 100%;
+    background-color: #F6F8FA;
+}
+div .main{
+    margin: 0 auto;
+}
+
+header{
+    height: 50px;
+    padding: 10px;
+    width: 1900px;
+    background-color: #ffffff;
+    margin:0;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #E3E6F0;
+}
+
+header h4{
+    color: rgb(0, 0, 0);
+    font-size: 30px;
+    margin: 0;
+}
+.update {
+    margin-top: 15px;
+    color: rgb(0, 0, 0);
+    text-align: right;
+    display: flex;
+    flex-direction: row;
+    flex: 2;
+}
+.update  #text{
+    text-align: right;
+    color: rgb(0, 0, 0);
+    font-size: 15px;
+    flex:10;
+    margin: 0 10px 0 0;
+}
+.update #clock{
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-size: 15px;
+    flex:0;
+    margin:0 7px 0 0;
+}
+button#logout {
+    cursor: pointer;
+    background-color: rgb(248, 248, 242);
+    border: 0;
+    font-size: 12px;
+    margin:10px 0 0 5px;
+    height: 30px;
+}
+.sidebar {
+    padding: 0;
+}
+ul, li {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 3px;
+}
+nav{
+    position: absolute;
+    background-color: #79A2EC;
+    float: left;
+    height:817px;
+    padding: 10px;
+    margin: 0 5px 0 0;
+    border: 1px solid #999;
+}
+
+li .home {
+    font-size: 17px;
+    background-color: #79A2EC;
+    border: 0;
+    color: white;
+    cursor: pointer;
+}
+li .detail {
+    font-size: 17px;
+    background-color: #79A2EC;
+    border: 0;
+    color: white;
+    cursor: pointer;
+}
+section{
+    position: absolute;
+    float: left;
+    height: 780px;
+    margin: 0 5px 0 0;
+    left: 160px;
+    width: 1735px;
+}
+article {
+    margin: 20px;
+}
+.content_all {
+    display: flex;
+    flex-direction: row;
+    z-index: 99999999;
+}
+.mappicture {
+    text-align: center;
+}
+
+.mappicture .confirmer{
+    position: absolute;
+    z-index: 100;
+    margin-left: 600px;
+    top: 670px;
+    width: auto;
+    height: 100px;
+    margin-right: 10px;
+}
+.mappicture .contact{
+    position: absolute;
+    z-index: 100;
+    margin-left: 700px;
+    top: 670px;
+    width: auto;
+    height: 100px;
+}
+.content_all .map {
+    flex: 1;
+    height: 780px;
+    margin-right: 15px;
+    background-color: white;
+    border: 1px solid #E3E6F0; 
+    box-shadow: 2px 1px 7px 3px rgb(167, 167, 167); 
+    border-radius: 10px;
+}
+.map h3{
+    flex: 4;
+}
+.map .header{
+    display: flex;
+    flex-direction: row;
+    background-color: #F8F9FC;
+    border-radius: 10px;
+}
+.area {
+    position: absolute;
+    font-size: 12px;
+    z-index: 100;
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    background-color: #e1f4ff;
+    border: 1px solid black;
+    padding: 2px;
+    cursor: pointer;
+    opacity: 1;
+    font-weight: bold;
+}
+#seoul {
+    left: 360px;
+    top: 210px;
+}
+#deajeon {
+    left: 420px;
+    top: 350px;
+}
+#sejong {
+    left: 340px;
+    top: 300px;
+}
+#chungnam {
+    left: 270px;
+    top: 350px;
+}
+#gangwon {
+    left: 500px;
+    top: 180px;
+}
+
+#gyeonggi {
+    left: 350px;
+    top: 130px;
+}
+#incheon {
+    left: 260px;
+    top: 210px;
+}
+#chungbuk {
+    left: 430px;
+    top: 255px;
+}
+#gyeongbuk {
+    left: 525px;
+    top: 315px;
+}
+#deagu {
+    left: 560px;
+    top: 390px;
+}
+#ulsan {
+    left: 630px;
+    top: 480px;
+}
+#busan {
+    left: 590px;
+    top: 540px;
+}
+#gyeongnam {
+    left: 475px;
+    top: 490px;
+}
+#jeonbuk {
+    left: 350px;
+    top: 430px;
+}
+#gwangju {
+    left: 350px;
+    top: 525px;
+}
+#jeonnam {
+    left: 260px;
+    top: 570px;
+}
+#jeju {
+    left: 280px;
+    top: 730px;
+}
+.header .datetime{
+    flex: 2;
+    padding: 15px;
+}
+label #label {
+    padding-top:20px;
+}
+.content_all .datalist {
+    flex: 1;
+    margin-left: 20px;
+    background-color: white;
+    border: 1px solid #E3E6F0; 
+    box-shadow: 2px 1px 7px 3px rgb(167, 167, 167); 
+    border-radius: 10px;
+}
+.datalist .header{
+    background-color: #F8F9FC;
+    border-radius: 10px;
+}
+.tablelist {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+table, td, th{
+    border: 1px solid #999;
+    padding-left: 7px;
+}
+th#number {
+    width: 20%;
+    background-color: rgb(255, 244, 228);
+}
+th#sex {
+    width: 10%;
+    background-color: rgb(255, 244, 228);
+}
+th#contactnum {
+    width: 20%;
+    background-color: rgb(255, 244, 228);
+}
+th#visitnum {
+    width: 20%;
+    background-color: rgb(255, 244, 228);
+}
+th#confirmernum {
+    width: 20%;
+    background-color: rgb(255, 244, 228);
+}
+.tablelist #first {
+    margin: 10px;
+    flex: 1;
+}
+
+.tablelist #second {
+    margin: 10px;
+    flex: 1;
+    padding-left: 15px;
+    border-left: 1px solid #999;
+}
+footer {
+    color:#999;
+    height: 30px;
+    text-align: center;
+    bottom: 0;
+    width: 100%;
+    position: fixed;
+    padding-top: 15px;
+    background-color: white;
+    z-index: 99999;
+    border-top:1px solid #E3E6F0;
+}

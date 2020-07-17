@@ -1,0 +1,250 @@
+html, body{
+    border: 0;
+    height: 100%;
+    margin: 0;
+    width: 100%;
+    background-color: #F6F8FA;
+}
+div .confirmer_layout{
+    margin: 0 auto;
+}
+header{
+    height: 50px;
+    padding: 10px;
+    width: 1900px;
+    background-color: #ffffff;
+    margin:0;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #E3E6F0;
+}
+header h4{
+    color: rgb(0, 0, 0);
+    font-size: 30px;
+    margin: 0;
+}
+.update {
+    margin-top: 15px;
+    color: rgb(0, 0, 0);
+    text-align: right;
+    display: flex;
+    flex-direction: row;
+    flex: 2;
+}
+.update  #text{
+    text-align: right;
+    color: rgb(0, 0, 0);
+    font-size: 15px;
+    flex:10;
+    margin: 0 10px 0 0;
+}
+.update #clock{
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-size: 15px;
+    flex:0;
+    margin:0 7px 0 0;
+}
+button#logout {
+    cursor: pointer;
+    background-color: rgb(248, 248, 242);
+    border: 0;
+    font-size: 12px;
+    margin:10px 0 0 5px;
+    height: 30px;
+}
+.sidebar {
+    padding: 0;
+}
+ul, li {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 3px;
+}
+nav{
+    position: absolute;
+    background-color: #79A2EC;
+    float: left;
+    height:817px;
+    padding: 10px;
+    margin: 0 5px 0 0;
+    border: 1px solid #999;
+}
+
+li .home {
+    font-size: 17px;
+    background-color: #79A2EC;
+    border: 0;
+    color: white;
+    cursor: pointer;
+}
+li .detail {
+    font-size: 17px;
+    background-color: #79A2EC;
+    border: 0;
+    color: white;
+    cursor: pointer;
+}
+
+section{
+    margin-left: 171px;
+    width: 1746px;
+    border: 1px solid #999;
+    height: 817px;
+}
+article{
+    width: 1746px;
+    height: 817px;
+}
+
+.top_card {
+    background-color: rgb(238, 238, 238);
+    opacity: 0.9;
+    position: absolute;
+    border-bottom: 2px solid #999999;
+    top: 72px;
+    width: 1735px;
+    height: 80px;
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    z-index: 99;
+}
+
+.confirmer_card{
+    color: black;
+    margin: 3px 10px;
+    width: 300px;
+    padding: 3px;
+    border:2px solid #E74A3B;
+    background-color:white;
+    border-radius: 10px;
+}
+
+.confirmer_card p {
+    margin: 0;
+}
+.square {
+    background-color: rgb(255, 255, 255);
+    opacity: 0.8;
+    border: 2px solid #383838;
+    position: absolute;
+    top: 700px;
+    width: 300px;
+    height: 83px;
+    margin: 5px;
+    z-index: 99;
+    border-radius: 7px;
+}
+.square p{
+    margin: 10px 10px 10px 35px;
+}
+.square .contact_part{
+    display: flex;
+    flex-direction: row;
+    height : 40px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.contact_part table{
+    width: 300px;
+    margin: 5px;
+    text-align: center;
+}
+.contact_part td{
+    width: 90px;
+}
+td#label{
+    display: flex;
+    flex-direction: row;
+    width: 70px;
+}
+
+.bottom_card {
+    background-color: rgb(238, 238, 238);
+    opacity: 0.9;
+    position: absolute;
+    top: 810px;
+    width: 1735px;
+    height: 70px;
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    border-top:2px solid #999999;
+    z-index: 99;
+}
+
+.bottom_card .contact_card{
+    color: black;
+    margin: 3px 10px;
+    width: 300px;
+    padding: 3px;
+    border:2px solid #00A9AE;
+    background-color:white;
+    border-radius: 10px;
+}
+
+.contact_card p {
+    margin: 0;
+}
+
+.side_card {
+    background-color:  rgb(247, 247, 247);
+    opacity: 0.9;
+    position: absolute;
+    left: 1516px;
+    top: 164px;
+    width: 400px;
+    height: 645px;
+    border-left: 2px solid #999999;
+    z-index: 99;
+}
+
+.side_card .root_card {
+    color: black;
+    margin: 10px 10px 15px 10px;
+    width: 370px;
+    border:2px solid rgb(0, 0, 0);
+    background-color:white;
+    display: flex;
+    flex-direction: row;
+    border-radius: 7px;
+}
+.root_card p{
+    margin: 0;
+}
+
+.root_card table{
+    width: 100%;
+}
+
+td#place {
+    width: 80%;
+    border-left:1px solid #000000;
+    border-bottom: 1px solid black;
+    padding: 3px;
+}
+td#time {
+    width: 80%;
+    border-left:1px solid #000000;
+}
+td#num {
+    width: 10%;
+    border-left:1px solid #000000;
+    text-align: center;
+    background-color: #a2dada;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+footer {
+    color:#999;
+    height: 30px;
+    text-align: center;
+    bottom: 0;
+    width: 100%;
+    position: fixed;
+    padding-top: 15px;
+    background-color: white;
+    z-index: 99999;
+    border-top:1px solid #E3E6F0;
+}
