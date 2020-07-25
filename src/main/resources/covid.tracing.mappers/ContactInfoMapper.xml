@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="covid.tracing.mappers.CntctInfoMapper">
+
+<!--    <select id="findAllContactInfo" resultMap="ConfPatient">-->
+<!--        SELECT *-->
+<!--        FROM CNTCT_INFO_TB-->
+<!--    </select>-->
+
+<!--    <select id="findAllTodayContactInfo" resultMap="ConfPatient">-->
+<!--        SELECT *-->
+<!--        FROM CNTCT_INFO_TB-->
+<!--        WHERE DATE_FORMAT(CNTCT_INFO_TB.CNTCT_DT, "%Y-%m-%d") = DATE_FORMAT(NOW(), '%Y-%m-%d')-->
+<!--    </select>-->
+
+<!--    <select id="findContactorInfoList" resultMap="ContactorInfo" parameterType="covid.tracing.model.CntctInfo">-->
+<!--        SELECT TEMP_TB.USER_SQ, TEMP_TB.CONF_PATIENT_SQ, TEMP_TB.VISIT_POINT_NUM, USER_TB.GENDER-->
+<!--        FROM-->
+<!--            (SELECT-->
+<!--                CNTCT_INFO_TB.USER_SQ,-->
+<!--                CNTCT_INFO_TB.CONF_PATIENT_SQ,-->
+<!--                (SELECT COUNT(*) FROM USER_VISIT_HISTORY_TB WHERE USER_VISIT_HISTORY_TB.USER_SQ = CNTCT_INFO_TB.USER_SQ AND CNTCT_INFO_TB.CNTCT_DT = DATE_FORMAT(#{date}, '%Y-%m-%d')) AS VISIT_POINT_NUM-->
+<!--            FROM CNTCT_INFO_TB)-->
+<!--            AS TEMP_TB-->
+<!--            INNER JOIN USER_TB-->
+<!--            ON TEMP_TB.USER_SQ = USER_TB.USER_SQ-->
+<!--    </select>-->
+
+<!--    <select id="countCntctPatientByConfPatientVisitHstId" resultType="int" parameterType="int">-->
+<!--        SELECT COUNT(*) FROM CNTCT_INFO_TB WHERE CONF_PATIENT_VISIT_HST_ID = #{id}-->
+<!--    </select>-->
+
+
+<!--    <select id="findAllConfPatient" resultMap="ConfirmerPatientInfo">-->
+<!--        SELECT-->
+<!--            CONFIRMER_PATIENT_TB.CONF_PATIENT_SQ,-->
+<!--            CONFIRMER_PATIENT_TB.GENDER,-->
+<!--            CONFIRMER_PATIENT_TB.CONF_DT,-->
+<!--            CONFIRMER_PATIENT_TB.REGION,-->
+<!--            CONFIRMER_PATIENT_TB.DISTRICT,-->
+<!--            (SELECT COUNT(*) FROM CONFIRMER_PATIENT_VISIT_HISTORY_TB WHERE CONFIRMER_PATIENT_VISIT_HISTORY_TB.CONF_PATIENT_SQ = CONFIRMER_PATIENT_TB.CONF_PATIENT_SQ)-->
+<!--                AS VISIT_POINT_NUM,-->
+<!--            (SELECT COUNT(*) FROM CNTCT_INFO_TB WHERE CNTCT_INFO_TB.CONF_PATIENT_SQ = CONFIRMER_PATIENT_TB.CONF_PATIENT_SQ)-->
+<!--                AS CONTACTOR_NUM-->
+<!--        FROM CONFIRMER_PATIENT_TB-->
+<!--        ORDER BY CONFIRMER_PATIENT_TB.CONF_DT DESC-->
+<!--    </select>-->
+
+    <resultMap id="ContactorInfo" type="covid.tracing.model.customfind.CntctPatientInfo">
+        <result property="cntctPatientId" column="USER_SQ"/>
+        <result property="confPatientId" column="CONF_PATIENT_SQ"/>
+        <result property="visitPointNum" column="VISIT_POINT_NUM"/>
+        <result property="gender" column="GENDER"/>
+    </resultMap>
+
+    <resultMap id="ConfPatient" type="covid.tracing.model.CntctInfo">
+        <result property="cntctInfoId" column="CNTCT_INFO_SQ"/>
+        <result property="userId" column="USER_SQ"/>
+        <result property="confPatientId" column="CONF_PATIENT_SQ"/>
+        <result property="beaconUUID" column="BEACON_UUID"/>
+        <result property="userVisitHstId" column="USER_VISIT_HST_ID"/>
+        <result property="confPatientVisitHstId" column="CONF_PATIENT_VISIT_HST_ID"/>
+        <result property="cntctDate" column="CNTCT_DT"/>
+    </resultMap>
+</mapper>
+
+
+
+
+<!--<insert id="insertUser" useGeneratedKeys="true" keyProperty="userId" parameterType="covid.tracing.model.User">-->
+<!--        INSERT INTO USER_TB-->
+<!--        (-->
+<!--            EMAIL,-->
+<!--            PWD,-->
+<!--            USER_NM,-->
+<!--            BIRTH_DATE_YMD,-->
+<!--            PHONE_NO-->
+<!--        )-->
+<!--        VALUE-->
+<!--        (-->
+<!--            #{email},-->
+<!--            #{password},-->
+<!--            #{name},-->
+<!--            #{birthdate},-->
+<!--            #{phone}-->
+<!--        )-->
+<!--    </insert>-->

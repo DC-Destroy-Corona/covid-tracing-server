@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="covid.tracing.mappers.AuthenticationMapper">
+
+    <insert id="insertUserAuthentication" parameterType="hashmap">
+        INSERT INTO AUTHENTICATION_TB
+        (
+            AUTH_KEY,
+            EMAIL,
+            ROLE
+        )
+        VALUE
+        (
+            #{authKey},
+            #{email},
+            #{role}
+        )
+    </insert>
+
+    <select id="findUserAuthentication" resultMap="Authentication" parameterType="hashmap">
+        SELECT
+            AUTH_KEY, EMAIL, ROLE
+        FROM AUTHENTICATION_TB
+        WHERE AUTHENTICATION_TB.AUTH_KEY = #{authKey}
+        AND AUTHENTICATION_TB.EMAIL = #{email}
+        AND AUTHENTICATION_TB.ROLE = #{role}
+    </select>
+
+    <delete id="deleteUserAuthentication" parameterType="hashmap">
+        DELETE FROM AUTHENTICATION_TB
+        WHERE AUTHENTICATION_TB.EMAIL = #{email}
+        AND AUTHENTICATION_TB.ROLE = #{role}
+    </delete>
+
+    <update id="updateUserAuthentication" parameterType="hashmap">
+        update house
+        set
+        AUTH_KEY = #{authKey},
+        where EMAIL = #{email}
+        and ROLE = #{role}
+    </update>
+
+    <resultMap id="Authentication" type="covid.tracing.model.Authentication">
+        <result property="authKey" column="AUTH_KEY"/>
+        <result property="email" column="EMAIL"/>
+        <result property="role" column="ROLE"/>
+    </resultMap>
+</mapper>
