@@ -1,8 +1,7 @@
 package covid.tracing.model;
 
 
-import covid.tracing.epidemiologist.EpidemiologistDTO;
-import covid.tracing.user.UserDTO;
+import covid.tracing.account.epidemiologist.EpidemiologistDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,10 +20,13 @@ public class Epidemiologist {
 
     private String phone;
 
+    private String gender;
+
     public Epidemiologist(EpidemiologistDTO.SignUp signUp) {
         this.email = signUp.getEmail();
         this.password = signUp.getPassword();
         this.name = signUp.getName();
         this.phone = signUp.getPhone();
+        this.gender = signUp.getGender();
     }
 }

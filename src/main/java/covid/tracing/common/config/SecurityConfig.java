@@ -41,7 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .httpBasic().disable() // 기본 인증 페이지 제거
                 .csrf().disable()
-                .cors().disable()
+                .cors()
+                    .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                 .headers().frameOptions().disable()

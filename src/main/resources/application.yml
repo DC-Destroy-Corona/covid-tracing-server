@@ -1,11 +1,12 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/covid_tracing?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:log4jdbc:mysql://localhost:3306/covid_tracing?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&useSSL=false
     username: root
     password: 11111111
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     dbcp2:
       validation-query: SELECT 1
+
 
   rabbitmq:
     host: localhost
@@ -15,19 +16,12 @@ spring:
     username: covid
     password: covid
 
-  thymeleaf:
-    prefix: classpath:/templates/
-    check-template-location: true
-    suffix: .html
-    mode: HTML5
-    cache: false # 개발 모드 : false, 운영 모드 : true
-    encoding: utf-8
 
   mail:
     host: smtp.gmail.com
     port: 587
-    username:
-    password:
+    username: ejsvk3284@gmail.com
+    password: 1q2w3e4r1!
     properties:
       mail:
         smtp:
@@ -47,4 +41,15 @@ mybatis:
 server:
   port: 8888
 
+logging:
+  config: classpath:logback-spring.xml
+  file:
+    name: logfile.log
+    path: ./logs/
 
+
+#logging:
+#  level:
+#    jdbc.sqlonly: debug        # sql문 로깅
+#    jdbc.sqltiming: debug      # sql 실행 시간 로깅
+#    jdbc.resultsettable: debug # 쿼리 결과 테이블 형식으로 로깅

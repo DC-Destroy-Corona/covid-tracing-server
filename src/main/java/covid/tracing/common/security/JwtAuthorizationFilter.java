@@ -33,11 +33,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         Long id = null;
         String jwt = null;
         UserPrincipal userPrincipal = null;
-
         logger.info("[" + uri +  "] execute filter(JwtAuthorizationFilter)... ");
 
         if(uri.length() == 1 || // "/" 인 경우
-                uri.contains("login") ||
+//                uri.contains("login") ||
                 uri.contains("sign-up") ||
                 uri.contains("css") ||
                 uri.contains("images")) {
@@ -46,26 +45,28 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
-        if(uri.contains("user")) { // header 에서 token 얻기
-            final String authorizationHeader = request.getHeader(JwtUtil.HEADER_STRING);
-            if(authorizationHeader != null && authorizationHeader.startsWith(jwtUtil.TOKEN_PREFIX)) {
-                jwt = authorizationHeader.substring(7);
-                id = jwtUtil.extractId(jwt);
-            }
-            userPrincipal = this.customUserDetailsService.loadUserById(id);
-            logger.info("extract jwt and userId when user");
-        } else if(uri.contains("epid")) { // cookie에서 token 얻기
-            jwt = Arrays.stream(request.getCookies())
-                    .filter(cookie -> cookie.getName().equals(CookieUtil.COOKIE_NAME))
-                    .findFirst().map(Cookie::getValue)
-                    .orElse("dummy");
-            id = jwtUtil.extractId(jwt);
-            userPrincipal = this.customUserDetailsService.loadEpidemiologistById(id);
-            logger.info("extract jwt and userId when epid");
-        }
+//        if(uri.contains("user")) { // header 에서 token 얻기
+//            final String authorizationHeader = request.getHeader(JwtUtil.HEADER_STRING);
+//            if(authorizationHeader != null && authorizationHeader.startsWith(jwtUtil.TOKEN_PREFIX)) {
+//                jwt = authorizationHeader.substring(7);
+//                id = jwtUtil.extractId(jwt);
+//            }
+//            userPrincipal = this.customUserDetailsService.loadUserById(id);
+//            logger.info("extract jwt and userId when user");
+//        } else if(uri.contains("epid")) { // cookie에서 token 얻기
+//            jwt = Arrays.stream(request.getCookies())
+//                    .filter(cookie -> cookie.getName().equals(CookieUtil.COOKIE_NAME))
+//                    .findFirst().map(Cookie::getValue)
+//                    .orElse("dummy");
+//            id = jwtUtil.extractId(jwt);
+//            userPrincipal = this.customUserDetailsService.loadEpidemiologistById(id);
+//            logger.info("extract jwt and userId when epid");
+//        }
 
-        logger.info("jwt : " + jwt);
-        logger.info("id : " + id.toString());
+        if(jwt != null) {
+            logger.info("jwt : " + jwt);
+            logger.info("id : " + id.toString());
+        }
 
         // 추후 request url 과 jwt.getClaims(jwtUtil.ROLE) 을 이용해서 아래와 같은 조건 추가
         // 1. 사용자가 역학조사관만이 접근할 수 있는 리소스에 접근하는 경우 제한

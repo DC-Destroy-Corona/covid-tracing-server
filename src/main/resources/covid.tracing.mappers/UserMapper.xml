@@ -5,6 +5,22 @@
 
 <mapper namespace="covid.tracing.mappers.UserMapper">
 
+    <select id="countCntctPatientByConfPatientVisitHstId" resultType="int" parameterType="hashmap">
+        SELECT COUNT(*) FROM CNTCT_INFO_TB
+        WHERE CONF_PATIENT_SQ = #{confPatientId}
+        AND   CONF_PATIENT_VISIT_HST_ID = #{confPatientVisitHstId}
+    </select>
+
+    <select id="findAllCntctInfoByUserMovingInfo" resultMap="ContactorInfo" parameterType="hashmap">
+        SELECT * FROM CNTCT_INFO_TB
+        WHERE USER_SQ = #{userId}
+        AND USER_VISIT_HST_ID = #{userVisitHstId}
+    </select>
+
+    <resultMap id="ContactorInfo" type="covid.tracing.model.customfind.ContactorInfo">
+        <result property="id" column="CONF_PATIENT_SQ"/>
+    </resultMap>
+
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId" parameterType="covid.tracing.model.User">
         INSERT INTO USER_TB
         (
@@ -24,6 +40,29 @@
         )
     </insert>
 
+    <insert id="insertContactInfoList" parameterType="java.util.Map">
+        insert into CNTCT_INFO_TB
+        (
+        BEACON_UUID,
+        USER_SQ,
+        USER_VISIT_HST_ID,
+        CONF_PATIENT_SQ,
+        CONF_PATIENT_VISIT_HST_ID,
+        CNTCT_DT
+        )
+        values
+        <foreach collection="cnctInfoList" item="item" separator=" , ">
+            (
+            #{item.beaconUUID},
+            #{item.userId},
+            #{item.userVisitHstId},
+            #{item.confPatientId},
+            #{item.confPatientVisitHstId},
+            #{item.cntctDt}
+            )
+        </foreach>
+    </insert>
+
     <select id="findUserWithEmail" resultMap="User" parameterType="string">
         SELECT *
         FROM USER_TB
@@ -36,6 +75,151 @@
         WHERE USER_TB.USER_SQ = #{id}
     </select>
 
+    <select id="findAllCntctPatient" resultMap="CnctPatientInfo">
+        SELECT
+            TEMP_TB.USER_SQ,
+            TEMP_TB.CONF_PATIENT_SQ,
+            TEMP_TB.VISIT_POINT_NUM,
+            USER_TB.GENDER,
+            USER_TB.EMAIL,
+            USER_TB.USER_NM,
+            USER_TB.BIRTH_DATE_YMD,
+            USER_TB.PHONE_NO
+        FROM
+            (
+                SELECT
+                    CNTCT_INFO_TB.USER_SQ,
+                    CNTCT_INFO_TB.CONF_PATIENT_SQ,
+                    (SELECT COUNT(*) FROM USER_VISIT_HISTORY_TB WHERE USER_VISIT_HISTORY_TB.USER_SQ = CNTCT_INFO_TB.USER_SQ) AS VISIT_POINT_NUM
+                FROM CNTCT_INFO_TB
+            ) AS TEMP_TB
+            INNER JOIN USER_TB
+            ON TEMP_TB.USER_SQ = USER_TB.USER_SQ
+        WHERE 1=1
+        <if test="region != 'kr'">
+            AND USER_TB.REGION = #{region}
+        </if>
+        <if test="date != '0000-00-00'">
+            AND DATE_FORMAT(TEMP_TB.CNTCT_DT, '%Y-%m-%d') = #{date}
+        </if>
+        GROUP BY
+            TEMP_TB.USER_SQ,
+            TEMP_TB.CONF_PATIENT_SQ
+        HAVING COUNT(*) > 1
+    </select>
+
+    <!-- 접촉자 아이디(사용자 아이디)가 중복되는 것은 나중에 처리 -->
+    <select id="countCntctPatient" resultType="int" parameterType="hashmap">
+        SELECT
+            COUNT(*)
+        FROM (
+            SELECT
+                CNTCT_INFO_TB.USER_SQ,
+                CNTCT_INFO_TB.CNTCT_DT
+            FROM CNTCT_INFO_TB
+        ) AS TEMP_TB
+        INNER JOIN USER_TB ON TEMP_TB.USER_SQ = USER_TB.USER_SQ
+        WHERE 1=1
+        <if test="region != 'kr'">
+            AND USER_TB.REGION = #{region}
+        </if>
+        <if test="date != '0000-00-00'">
+            AND DATE_FORMAT(TEMP_TB.CNTCT_DT, '%Y-%m-%d') = #{date}
+        </if>
+    </select>
+
+
+
+    <select id="findAllCntctPatientMovingInfoById" resultMap="CntctPatientMovingInfo" parameterType="long">
+        SELECT
+            BEACON_TB.STREET_NAME_ADDR,
+            BEACON_TB.LATITUDE,
+            BEACON_TB.LONGITUDE,
+            USER_VISIT_HISTORY_TB.FIRST_RCPT_DT,
+            USER_VISIT_HISTORY_TB.LAST_RCPT_DT,
+            USER_VISIT_HISTORY_TB.USER_VISIT_HST_ID,
+            (SELECT COUNT(DISTINCT CNTCT_INFO_TB.CONF_PATIENT_SQ) FROM CNTCT_INFO_TB WHERE CNTCT_INFO_TB.USER_SQ = #{cntctPatientId}) AS CONF_PATIENT_NUM
+            <!--CNTCT_INFO_TB.CONF_PATIENT_SQ, -->
+        FROM CNTCT_INFO_TB
+            INNER JOIN USER_VISIT_HISTORY_TB
+                ON USER_VISIT_HISTORY_TB.USER_SQ = #{cntctPatientId}
+                AND CNTCT_INFO_TB.USER_VISIT_HST_ID = USER_VISIT_HISTORY_TB.USER_VISIT_HST_ID
+            INNER JOIN BEACON_TB
+                ON USER_VISIT_HISTORY_TB.BEACON_UUID = BEACON_TB.BEACON_UUID;
+    </select>
+<!--    추후 위에 쿼리랑 비교 하기-->
+<!--    차이점 : AND USER_VISIT_HISTORY_TB.CNTCT_ST = 1 유뮤 ->
+<!-    <select id="findAllCntctPatientMovingInfoById" resultMap="CntctPatientMovingInfo" parameterType="long">-->
+<!--        SELECT-->
+<!--            BEACON_TB.STREET_NAME_ADDR,-->
+<!--            BEACON_TB.LATITUDE,-->
+<!--            BEACON_TB.LONGITUDE,-->
+<!--            CNTCT_INFO_TB.CONF_PATIENT_SQ,-->
+<!--            USER_VISIT_HISTORY_TB.FIRST_RCPT_DT,-->
+<!--            USER_VISIT_HISTORY_TB.LAST_RCPT_DT-->
+<!--        FROM CNTCT_INFO_TB-->
+<!--            INNER JOIN USER_VISIT_HISTORY_TB-->
+<!--                ON USER_VISIT_HISTORY_TB.USER_SQ = #{id}-->
+<!--                    AND USER_VISIT_HISTORY_TB.CNTCT_ST = 1-->
+<!--                    AND CNTCT_INFO_TB.USER_VISIT_HST_ID = USER_VISIT_HISTORY_TB.USER_VISIT_HST_ID-->
+<!--            INNER JOIN BEACON_TB-->
+<!--                ON USER_VISIT_HISTORY_TB.BEACON_UUID = BEACON_TB.BEACON_UUID;-->
+<!--    </select>-->
+    <resultMap id="CntctPatientMovingInfo" type="covid.tracing.model.customfind.CntctPatientMovingInfo">
+        <result property="location" column="STREET_NAME_ADDR"/>
+        <result property="latitude" column="LATITUDE"/>
+        <result property="longitude" column="LONGITUDE"/>
+        <result property="firstDt" column="FIRST_RCPT_DT"/>
+        <result property="lastDt" column="LAST_RCPT_DT"/>
+        <result property="userVisitHstId" column="USER_VISIT_HST_ID"/>
+        <result property="personNum" column="CONF_PATIENT_NUM"/>
+        <!--<result property="confPatientId" column="CONF_PATIENT_SQ"/>-->
+    </resultMap>
+
+    <select id="findUserVisitHistoryListByBeaconUuId" resultMap="UserVisitHistory" parameterType="string">
+        SELECT *
+        FROM USER_VISIT_HISTORY_TB
+        WHERE USER_VISIT_HISTORY_TB.BEACON_UUID = #{uuid}
+    </select>
+
+    <select id="findAllCntctInfoByConfId" resultMap="CntctInfo" parameterType="long">
+        SELECT *
+        FROM CNTCT_INFO_TB
+             INNER JOIN BEACON_TB
+             ON CNTCT_INFO_TB.BEACON_UUID = BEACON_TB.BEACON_UUID
+        WHERE CNTCT_INFO_TB.CONF_PATIENT_SQ = #{id}
+    </select>
+
+    <resultMap id="CntctInfo" type="covid.tracing.model.CntctInfo">
+        <result property="cntctInfoId" column="CNTCT_INFO_SQ"/>
+        <result property="userId" column="USER_SQ"/>
+        <result property="beaconUUID" column="BEACON_UUID"/>
+        <result property="userVisitHstId" column="USER_VISIT_HST_ID"/>
+        <result property="confPatientId" column="CONF_PATIENT_SQ"/>
+        <result property="confPatientVisitHstId" column="CONF_PATIENT_VISIT_HST_ID"/>
+        <result property="cntctDt" column="CNTCT_DT"/>
+    </resultMap>
+
+    <resultMap id="UserVisitHistory" type="covid.tracing.model.UserVisitHistory">
+        <result property="beaconUuid" column="BEACON_UUID"/>
+        <result property="userId" column="USER_SQ"/>
+        <result property="userVisitHistoryId" column="USER_VISIT_HST_ID"/>
+        <result property="firstDt" column="FIRST_RCPT_DT"/>
+        <result property="lastDt" column="LAST_RCPT_DT"/>
+    </resultMap>
+
+    <resultMap id="CnctPatientInfo" type="covid.tracing.model.customfind.CntctPatientInfo">
+        <result property="cntctPatientId" column="USER_SQ"/>
+        <result property="confPatientId" column="CONF_PATIENT_SQ"/>
+        <result property="visitPointNum" column="VISIT_POINT_NUM"/>
+        <result property="gender" column="GENDER"/>
+
+        <result property="email" column="EMAIL"/>
+        <result property="name" column="USER_NM"/>
+        <result property="birthdate" column="BIRTH_DATE_YMD"/>
+        <result property="phone" column="PHONE_NO"/>
+    </resultMap>
+
     <resultMap id="User" type="covid.tracing.model.User">
         <result property="userId" column="USER_SQ"/>
         <result property="email" column="EMAIL"/>
@@ -44,5 +228,74 @@
         <result property="birthdate" column="BIRTH_DATE_YMD"/>
         <result property="phone" column="PHONE_NO"/>
     </resultMap>
-
 </mapper>
+
+
+
+        <!--    <select id="findAllCntctPatientByRegionAndDate" resultMap="CnctPatientInfo" parameterType="hashmap">-->
+        <!--        SELECT-->
+        <!--            TEMP_TB.USER_SQ,-->
+        <!--            TEMP_TB.CONF_PATIENT_SQ,-->
+        <!--            TEMP_TB.VISIT_POINT_NUM,-->
+        <!--            USER_TB.GENDER,-->
+        <!--            USER_TB.EMAIL,-->
+        <!--            USER_TB.USER_NM,-->
+        <!--            USER_TB.BIRTH_DATE_YMD,-->
+        <!--            USER_TB.PHONE_NO-->
+        <!--        FROM (-->
+        <!--                SELECT-->
+        <!--                    CNTCT_INFO_TB.USER_SQ,-->
+        <!--                    CNTCT_INFO_TB.CONF_PATIENT_SQ,-->
+        <!--                    (SELECT COUNT(*) FROM USER_VISIT_HISTORY_TB WHERE USER_VISIT_HISTORY_TB.USER_SQ = CNTCT_INFO_TB.USER_SQ) AS VISIT_POINT_NUM,-->
+        <!--                    CNTCT_INFO_TB.CNTCT_DT-->
+        <!--                FROM CNTCT_INFO_TB-->
+        <!--             ) AS TEMP_TB-->
+        <!--             INNER JOIN USER_TB ON TEMP_TB.USER_SQ = USER_TB.USER_SQ-->
+        <!--        WHERE USER_TB.REGION = #{region}-->
+        <!--        AND   DATE_FORMAT(TEMP_TB.CNTCT_DT, '%Y-%m-%d') = #{date}-->
+        <!--    </select>-->
+
+        <!--    <select id="findAllCntctPatientByRegion" resultMap="CnctPatientInfo" parameterType="string">-->
+        <!--        SELECT-->
+        <!--            TEMP_TB.USER_SQ,-->
+        <!--            TEMP_TB.CONF_PATIENT_SQ,-->
+        <!--            TEMP_TB.VISIT_POINT_NUM,-->
+        <!--            USER_TB.GENDER,-->
+        <!--            USER_TB.EMAIL,-->
+        <!--            USER_TB.USER_NM,-->
+        <!--            USER_TB.BIRTH_DATE_YMD,-->
+        <!--            USER_TB.PHONE_NO-->
+        <!--        FROM (-->
+        <!--                SELECT-->
+        <!--                    CNTCT_INFO_TB.USER_SQ,-->
+        <!--                    CNTCT_INFO_TB.CONF_PATIENT_SQ,-->
+        <!--                    (SELECT COUNT(*) FROM USER_VISIT_HISTORY_TB WHERE USER_VISIT_HISTORY_TB.USER_SQ = CNTCT_INFO_TB.USER_SQ) AS VISIT_POINT_NUM,-->
+        <!--                    CNTCT_INFO_TB.CNTCT_DT-->
+        <!--                FROM CNTCT_INFO_TB-->
+        <!--             ) AS TEMP_TB-->
+        <!--             INNER JOIN USER_TB ON TEMP_TB.USER_SQ = USER_TB.USER_SQ-->
+        <!--        WHERE USER_TB.REGION = #{region}-->
+        <!--    </select>-->
+
+        <!--    <select id="findAllCntctPatientByDate" resultMap="CnctPatientInfo" parameterType="hashmap">-->
+        <!--        SELECT-->
+        <!--            TEMP_TB.USER_SQ,-->
+        <!--            TEMP_TB.CONF_PATIENT_SQ,-->
+        <!--            TEMP_TB.VISIT_POINT_NUM,-->
+        <!--            USER_TB.GENDER,-->
+        <!--            USER_TB.EMAIL,-->
+        <!--            USER_TB.USER_NM,-->
+        <!--            USER_TB.BIRTH_DATE_YMD,-->
+        <!--            USER_TB.PHONE_NO-->
+        <!--        FROM (-->
+        <!--                SELECT-->
+        <!--                    CNTCT_INFO_TB.USER_SQ,-->
+        <!--                    CNTCT_INFO_TB.CONF_PATIENT_SQ,-->
+        <!--                    (SELECT COUNT(*) FROM USER_VISIT_HISTORY_TB WHERE USER_VISIT_HISTORY_TB.USER_SQ = CNTCT_INFO_TB.USER_SQ) AS VISIT_POINT_NUM,-->
+        <!--                    CNTCT_INFO_TB.CNTCT_DT-->
+        <!--                FROM CNTCT_INFO_TB-->
+        <!--             ) AS TEMP_TB-->
+        <!--             INNER JOIN USER_TB ON TEMP_TB.USER_SQ = USER_TB.USER_SQ-->
+        <!--        WHERE USER_TB.REGION = #{region}-->
+        <!--        AND DATE_FORMAT(TEMP_TB.CNTCT_DT, '%Y-%m-%d') = #{date}-->
+        <!--    </select>-->

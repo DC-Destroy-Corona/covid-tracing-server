@@ -33,24 +33,28 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     public UserPrincipal loadUserByEmail(String email) {
         logger.info("load user by email(" + email.toString() + ")");
+        logger.info("execute query method) userMapper.findUserWithEmail(email)");
         User user = userMapper.findUserWithEmail(email);
         return UserPrincipal.create(user);
     }
 
     public UserPrincipal loadEpidemiologistByEmail(String email) {
         logger.info("load epidemiologist by email(" + email.toString() + ")");
+        logger.info("execute query method) epidemiologistMapper.findEpidemiologistWithEmail(email)");
         Epidemiologist epidemiologist = epidemiologistMapper.findEpidemiologistWithEmail(email);
         return UserPrincipal.create(epidemiologist);
     }
 
     public UserPrincipal loadUserById(Long id) {
         logger.info("load user by id");
+        logger.info("execute query method) userMapper.findUserWithId(id)");
         User user = userMapper.findUserWithId(id);
         return UserPrincipal.create(user);
     }
 
     public UserPrincipal loadEpidemiologistById(Long id) {
         logger.info("load user by id");
+        logger.info("execute query method) epidemiologistMapper.findEpidemiologistWithId(id)");
         Epidemiologist epidemiologist = epidemiologistMapper.findEpidemiologistWithId(id);
         return UserPrincipal.create(epidemiologist);
     }

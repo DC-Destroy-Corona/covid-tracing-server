@@ -1,12 +1,11 @@
 package covid.tracing.common.security;
 
-import covid.tracing.common.enums.Role;
+import covid.tracing.common.datatype.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.codec.Utf8;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

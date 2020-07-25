@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="covid.tracing.mappers.ConfirmerPatientMapper">
+
+    <insert id="insertConfPatient" useGeneratedKeys="true" keyProperty="confPatientId" parameterType="covid.tracing.model.ConfirmerPatient">
+            INSERT INTO CONFIRMER_PATIENT_TB
+            (
+                CONF_PATIENT_SQ,
+                CONF_DT,
+                REGION,
+                GENDER
+            )
+            VALUE
+            (
+                #{confPatientId},
+                #{confDt},
+                #{region},
+                #{gender}
+            )
+    </insert>
+
+    <insert id="insertConfPatientMovingInfoList" parameterType="java.util.Map">
+        insert into CONFIRMER_PATIENT_VISIT_HISTORY_TB
+        (
+        CONF_PATIENT_SQ, CONF_PATIENT_VISIT_HST_ID, LOCAL_ID,
+        PROVINCE, VISIT_TYPE, FIRST_DATE, LAST_DATE,
+        STREET_NAME_ADDR, STREET_NAME_ADDR_DESC, LATITUDE, LONGITUDE
+        )
+        values
+        <foreach collection="confPatientMovingInfoList" item="item" separator=" , ">
+            (
+            #{confPatientId}, #{item.confPatientMovingInfoId}, #{item.localId},
+            #{item.province}, #{item.type}, #{item.firstDatetime}, #{item.lastDatetime},
+            #{item.streetNameAddr}, #{item.streetNameAddrDesc}, #{item.latitude}, #{item.longitude}
+            )
+        </foreach>
+    </insert>
+
+    <select id="findAllConfPatientVisitHstWithoutRoadAddr" resultMap="ConfirmerPatientVisitHistory">
+        SELECT
+            CONFIRMER_PATIENT_VISIT_HISTORY_TB.CONF_PATIENT_SQ,
+            CONFIRMER_PATIENT_VISIT_HISTORY_TB.LOCAL_ID,
+            CONFIRMER_PATIENT_VISIT_HISTORY_TB.CONF_PATIENT_VISIT_HST_ID,
+            CONFIRMER_PATIENT_VISIT_HISTORY_TB.PROVINCE,
+            CONFIRMER_PATIENT_VISIT_HISTORY_TB.VISIT_TYPE,
+            CONFIRMER_PATIENT_VISIT_HISTORY_TB.FIRST_DATE,
+            CONFIRMER_PATIENT_VISIT_HISTORY_TB.LAST_DATE,
+            CONFIRMER_PATIENT_VISIT_HISTORY_TB.STREET_NAME_ADDR,
+            CONFIRMER_PATIENT_VISIT_HISTORY_TB.STREET_NAME_ADDR_DESC,
+            CONFIRMER_PATIENT_VISIT_HISTORY_TB.LATITUDE,
+            CONFIRMER_PATIENT_VISIT_HISTORY_TB.LONGITUDE
+        FROM CONFIRMER_PATIENT_VISIT_HISTORY_TB WHERE CONFIRMER_PATIENT_VISIT_HISTORY_TB.STREET_NAME_ADDR IS NULL
+    </select>
+
+    <update id="updateRoadAddrOfConfPatientVisitHistory">
+        UPDATE CONFIRMER_PATIENT_VISIT_HISTORY_TB
+        SET STREET_NAME_ADDR = #{streetNameAddr}, STREET_NAME_ADDR_DESC = #{streetNameAddrDesc}
+        WHERE CONFIRMER_PATIENT_VISIT_HISTORY_TB.CONF_PATIENT_SQ = #{confPatientId}
+        AND   CONFIRMER_PATIENT_VISIT_HISTORY_TB.CONF_PATIENT_VISIT_HST_ID = #{confPatientVisitHistoryId}
+    </update>
+
+    <select id="findAllConfPatient" resultMap="ConfirmerPatient" parameterType="hashmap">
+        SELECT * FROM CONFIRMER_PATIENT_TB
+        ORDER BY CONFIRMER_PATIENT_TB.CONF_DT DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <resultMap id="ConfirmerPatient" type="covid.tracing.model.ConfirmerPatient">
+        <result property="confPatientId" column="CONF_PATIENT_SQ"/>
+        <result property="confDt" column="CONF_DT"/>
+        <result property="region" column="REGION"/>
+        <result property="gender" column="GENDER"/>
+    </resultMap>
+
+
+    <select id="findAllConfPatientInfo" resultMap="ConfirmerPatientInfo" parameterType="hashmap">
+        SELECT
+            CONFIRMER_PATIENT_TB.CONF_PATIENT_SQ,
+            CONFIRMER_PATIENT_TB.GENDER,
+            CONFIRMER_PATIENT_TB.CONF_DT,
+            CONFIRMER_PATIENT_TB.REGION,
+            (SELECT COUNT(*) FROM CONFIRMER_PATIENT_VISIT_HISTORY_TB WHERE CONFIRMER_PATIENT_VISIT_HISTORY_TB.CONF_PATIENT_SQ = CONFIRMER_PATIENT_TB.CONF_PATIENT_SQ)
+                AS VISIT_POINT_NUM,
+            (SELECT COUNT(*) FROM CNTCT_INFO_TB WHERE CNTCT_INFO_TB.CONF_PATIENT_SQ = CONFIRMER_PATIENT_TB.CONF_PATIENT_SQ)
+                AS CONTACTOR_NUM
+        FROM CONFIRMER_PATIENT_TB
+        WHERE 1=1
+            <if test="region != 'kr'">
+                AND CONFIRMER_PATIENT_TB.REGION = #{region}
+            </if>
+            <if test="date != '0000-00-00'">
+                AND DATE_FORMAT(CONFIRMER_PATIENT_TB.CONF_DT, '%Y-%m-%d') = #{date}
+            </if>
+        ORDER BY CONFIRMER_PATIENT_TB.CONF_DT ASC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countConfPatient" resultType="int" parameterType="hashmap">
+        SELECT COUNT(*) FROM CONFIRMER_PATIENT_TB
+        WHERE 1=1
+            <if test="region != 'kr'">
+                AND CONFIRMER_PATIENT_TB.REGION = #{region}
+            </if>
+            <if test="date != '0000-00-00'">
+                AND DATE_FORMAT(CONFIRMER_PATIENT_TB.CONF_DT, '%Y-%m-%d') = #{date}
+            </if>
+    </select>
+
+    <!--    <select id="findAllConfPatientMovingInfoByConfId" resultMap="ConfirmerPatientMovingInfo" parameterType="long">-->
+    <!--        SELECT STREET_NAME_ADDR,-->
+    <!--               LATITUDE,-->
+    <!--               LONGITUDE,-->
+    <!--               VISIT_DT,-->
+    <!--               CONF_PATIENT_VISIT_HST_ID-->
+    <!--        FROM CONFIRMER_PATIENT_TB-->
+    <!--			 INNER JOIN CONFIRMER_PATIENT_VISIT_HISTORY_TB-->
+    <!--            ON CONFIRMER_PATIENT_TB.CONF_PATIENT_SQ = #{id}-->
+    <!--            AND CONFIRMER_PATIENT_VISIT_HISTORY_TB.CONF_PATIENT_SQ = #{id}-->
+    <!--        ORDER BY VISIT_DT ASC;-->
+    <!--    </select>-->
+
+    <select id="findAllConfPatientMovingInfoByConfId" resultMap="ConfirmerPatientMovingInfo" parameterType="long">
+        SELECT STREET_NAME_ADDR,
+               LATITUDE,
+               LONGITUDE,
+               FIRST_DATE,
+               LAST_DATE,
+               CONF_PATIENT_VISIT_HST_ID,
+               PROVINCE,
+               VISIT_TYPE
+        FROM CONFIRMER_PATIENT_TB
+			 INNER JOIN CONFIRMER_PATIENT_VISIT_HISTORY_TB
+            ON CONFIRMER_PATIENT_TB.CONF_PATIENT_SQ = #{id}
+            AND CONFIRMER_PATIENT_VISIT_HISTORY_TB.CONF_PATIENT_SQ = #{id}
+        ORDER BY CONFIRMER_PATIENT_VISIT_HISTORY_TB.CONF_PATIENT_VISIT_HST_ID ASC;
+    </select>
+
+    <delete id="deleteConfPatientById" parameterType="long">
+        DELETE FROM CONFIRMER_PATIENT_TB
+        WHERE CONFIRMER_PATIENT_TB.CONF_PATIENT_SQ = #{confPatientId}
+    </delete>
+
+    <resultMap id="ConfirmerPatientMovingInfo" type="covid.tracing.model.customfind.ConfirmerPatientMovingInfo">
+        <result property="location" column="STREET_NAME_ADDR"/>
+        <result property="latitude" column="LATITUDE"/>
+        <result property="longitude" column="LONGITUDE"/>
+        <result property="firstDt" column="FIRST_DATE"/>
+        <result property="lastDt" column="LAST_DATE"/>
+        <result property="confPatientVisitHstId" column="CONF_PATIENT_VISIT_HST_ID"/>
+        <result property="province" column="PROVINCE"/>
+        <result property="type" column="VISIT_TYPE"/>
+    </resultMap>
+
+    <select id="findAllCntctInfoByConfMovingInfo" resultMap="ContactorInfo" parameterType="hashmap">
+        SELECT * FROM CNTCT_INFO_TB
+        WHERE CONF_PATIENT_SQ = #{confPatientId}
+        AND CONF_PATIENT_VISIT_HST_ID = #{confPatientVisitHstId}
+    </select>
+
+    <delete id="deleteAllConfPatientMovingInfoByConfPatientId" parameterType="long">
+        DELETE FROM CONFIRMER_PATIENT_VISIT_HISTORY_TB WHERE CONF_PATIENT_SQ = #{confPatientId}
+    </delete>
+
+    <resultMap id="ContactorInfo" type="covid.tracing.model.customfind.ContactorInfo">
+        <result property="id" column="USER_SQ"/>
+    </resultMap>
+
+    <resultMap id="ConfirmerPatientInfo" type="covid.tracing.model.customfind.ConfirmerPatientInfo">
+        <result property="confPatientId" column="CONF_PATIENT_SQ"/>
+        <result property="confDt" column="CONF_DT"/>
+        <result property="region" column="REGION"/>
+        <result property="gender" column="GENDER"/>
+        <result property="visitPointNum" column="VISIT_POINT_NUM"/>
+        <result property="contactorNum" column="CONTACTOR_NUM"/>
+    </resultMap>
+
+    <resultMap id="ConfirmerPatientVisitHistory" type="covid.tracing.model.ConfirmerPatientVisitHistory">
+        <result property="confPatientId" column="CONF_PATIENT_SQ"/>
+        <result property="localId" column="LOCAL_ID"/>
+        <result property="confPatientVisitHistoryId" column="CONF_PATIENT_VISIT_HST_ID"/>
+        <result property="province" column="PROVINCE"/>
+        <result property="visitType" column="VISIT_TYPE"/>
+        <result property="firstDatetime" column="FIRST_DATE"/>
+        <result property="lastDatetime" column="LAST_DATE"/>
+        <result property="streetNameAddr" column="STREET_NAME_ADDR"/>
+        <result property="streetNameAddrDesc" column="STREET_NAME_ADDR_DESC"/>
+        <result property="latitude" column="LATITUDE"/>
+        <result property="longitude" column="LONGITUDE"/>
+    </resultMap>
+</mapper>

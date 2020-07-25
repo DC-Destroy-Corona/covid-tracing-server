@@ -1,6 +1,6 @@
 package covid.tracing.mappers;
 
-import covid.tracing.common.enums.Role;
+import covid.tracing.common.datatype.Role;
 import covid.tracing.model.Authentication;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

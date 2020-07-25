@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="covid.tracing.mappers.BeaconMapper">
+
+    <select id="findAdjBeaconListByLocation" resultMap="Beacon" parameterType="hashmap">
+        SELECT *
+        FROM BEACON_TB
+        HAVING
+        (6371*acos(cos(radians(#{latitude}))*cos(radians(BEACON_TB.LATITUDE))*cos(radians(BEACON_TB.LONGITUDE)
+        -radians(#{longitude}))+sin(radians(#{latitude}))*sin(radians(BEACON_TB.LATITUDE))))<![CDATA[ <= ]]> 0.01
+    </select>
+
+    <insert id="insertUserLocationMessageByBeacon" parameterType="hashmap">
+        insert into USER_VISIT_HISTORY_TB
+        (
+            USER_SQ,
+            BEACON_UUID,
+            FIRST_RCPT_DT,
+            LAST_RCPT_DT,
+            USER_VISIT_HST_ID
+        )
+        values
+        (
+            #{userId},
+            #{uuid},
+            #{head},
+            #{tail},
+            (SELECT COUNT(*) FROM USER_VISIT_HISTORY_TB ALIAS WHERE  ALIAS.USER_SQ = #{userId}) + 1
+        )
+    </insert>
+<!--                CURRENT_DATE(),-->
+
+    <select id="countBeacon" resultType="int">
+        SELECT COUNT(*) FROM BEACON_TB
+    </select>
+
+    <select id="findAllBeacon" resultMap="Beacon" parameterType="hashmap">
+        SELECT * FROM BEACON_TB ORDER BY INSTALL_DT DESC  LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <insert id="insertBeacon" parameterType="covid.tracing.model.Beacon">
+        INSERT INTO BEACON_TB
+        (
+            BEACON_UUID,
+            MAJOR,
+            MINOR,
+            LATITUDE,
+            LONGITUDE,
+            STREET_NAME_ADDR,
+            STREET_NAME_ADDR_DESC,
+            INSTALL_DT
+        )
+        VALUE
+        (
+            #{beacon.uuid},
+            #{beacon.major},
+            #{beacon.minor},
+            #{beacon.latitude},
+            #{beacon.longitude},
+            #{beacon.streetNameAddr},
+            #{beacon.streetNameAddrDesc},
+            CURRENT_DATE ()
+        )
+    </insert>
+
+    <resultMap id="Beacon" type="covid.tracing.model.Beacon">
+        <result property="uuid" column="BEACON_UUID"/>
+        <result property="major" column="MAJOR"/>
+        <result property="minor" column="MINOR"/>
+        <result property="latitude" column="LATITUDE"/>
+        <result property="longitude" column="LONGITUDE"/>
+        <result property="streetNameAddr" column="STREET_NAME_ADDR"/>
+        <result property="streetNameAddrDesc" column="STREET_NAME_ADDR_DESC"/>
+        <result property="installDatetime" column="INSTALL_DT"/>
+    </resultMap>
+</mapper>
